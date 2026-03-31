@@ -19,7 +19,8 @@ jobs:
         run: bun install
 
       - name: Build
-        run: bun run build
+        run: |
+          echo "y" | bunx opennextjs-cloudflare build
         env:
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
