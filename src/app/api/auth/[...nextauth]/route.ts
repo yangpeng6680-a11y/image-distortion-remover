@@ -9,9 +9,6 @@ const handler = NextAuth({
       clientSecret: "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",
     }),
   ],
-  pages: {
-    signIn: '/',
-  },
   secret: "development-secret-change-in-production",
   callbacks: {
     async session({ session, token }) {
