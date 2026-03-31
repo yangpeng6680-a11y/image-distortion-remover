@@ -1,4 +1,4 @@
-name: Deploy to Cloudflare Workers
+name: Deploy
 
 on:
   push:
@@ -9,26 +9,28 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
+      - uses: oven-sh/setup-bun@v1
 
-      - name: Install
-        run: bun install
+      - run: bun install
+
+      - name: Create config
+        run: |
+          cat > open-next.config.ts << 'EOF'
+          import type { OpenNextConfig } from '@opennextjs/cloudflare'
+          const config: OpenNextConfig = {}
+          export default config
+          EOF
 
       - name: Build
         run: |
-          echo "Creating open-next.config.ts..."
-          cat > open-next.config.ts << 'EOF'
-          import type { OpenNextConfig } from '@opennextjs/cloudflare'
-          
-          const config: OpenNextConfig = {}
-          
-          export default config
-          EOF
-          echo "y" | bunx opennextjs-cloudflare build
+          echo 'y' | bunx opennextjs-cloudflare build
+        env:
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          NEXTAUTH_URL: https://imagedistortion.shop
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
 
       - name: Deploy
         run: bunx wrangler deploy
