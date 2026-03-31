@@ -1,4 +1,4 @@
-name: Deploy to Cloudflare Pages
+name: Deploy to Cloudflare Workers
 
 on:
   push:
@@ -18,22 +18,29 @@ jobs:
       - name: Install
         run: bun install
 
-      - name: Create wrangler.toml
-        run: |
-          cat > wrangler.toml << 'EOF'
-          name = "image-distortion-remover"
-          compatibility_date = "2025-09-27"
-          pages_project = "image-distortion-remover"
-          EOF
-
       - name: Build
-        run: bun run build
+        run: |
+          echo "Creating open-next.config.ts..."
+          cat > open-next.config.ts << 'EOF'
+          import type { OpenNextConfig } from '@opennextjs/cloudflare'
+          
+          const config: OpenNextConfig = {
+            default: {
+              override: {
+                wrapper: 'opennextjs-cloudflare',
+                converter: 'opennextjs-cloudflare',
+                incrementalCache: 'opennextjs-cloudflare',
+                tagCache: 'opennextjs-cloudflare',
+                queue: 'opennextjs-cloudflare',
+              },
+            },
+          }
+          
+          export default config
+          EOF
+          echo "y" | bunx opennextjs-cloudflare build
 
       - name: Deploy
-        uses: cloudflare/pages-action@v1
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: 4a231bf78ffa10bfebe25d64ca3fc44f
-          projectName: image-distortion-remover
-          directory: .next
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+        run: bunx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
