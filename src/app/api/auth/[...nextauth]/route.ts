@@ -5,14 +5,14 @@ const handler = NextAuth({
   site: "https://imagedistortion.shop",
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: "999188124106-vr5ohml1q2acnnh3kq35e9t5o9v3o436.apps.googleusercontent.com",
+      clientSecret: "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",
     }),
   ],
   pages: {
     signIn: '/',
   },
-  secret: process.env.NEXTAUTH_SECRET || "development-secret-change-in-production",
+  secret: "development-secret-change-in-production",
   callbacks: {
     async session({ session, token }) {
       if (session.user && token.sub) {
