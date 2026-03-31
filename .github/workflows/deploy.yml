@@ -24,17 +24,7 @@ jobs:
           cat > open-next.config.ts << 'EOF'
           import type { OpenNextConfig } from '@opennextjs/cloudflare'
           
-          const config: OpenNextConfig = {
-            default: {
-              override: {
-                wrapper: 'opennextjs-cloudflare',
-                converter: 'opennextjs-cloudflare',
-                incrementalCache: 'opennextjs-cloudflare',
-                tagCache: 'opennextjs-cloudflare',
-                queue: 'opennextjs-cloudflare',
-              },
-            },
-          }
+          const config: OpenNextConfig = {}
           
           export default config
           EOF
