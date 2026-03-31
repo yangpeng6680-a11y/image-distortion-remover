@@ -2,7 +2,6 @@ import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 
 const handler = NextAuth({
-  site: "https://imagedistortion.shop",
   providers: [
     GoogleProvider({
       clientId: "999188124106-vr5ohml1q2acnnh3kq35e9t5o9v3o436.apps.googleusercontent.com",

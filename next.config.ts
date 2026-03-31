@@ -5,10 +5,6 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
-  env: {
-    NEXTAUTH_URL: "https://imagedistortion.shop",
-    NEXTAUTH_SECRET: "development-secret-change-in-production",
-  },
 };
 
 export default nextConfig;
