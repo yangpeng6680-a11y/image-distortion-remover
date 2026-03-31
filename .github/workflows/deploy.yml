@@ -15,10 +15,24 @@ jobs:
 
       - run: bun install
 
+      - name: Create config
+        run: |
+          cat > open-next.config.ts << 'EOF'
+          import type { OpenNextConfig } from '@opennextjs/cloudflare'
+          const config: OpenNextConfig = {
+            default: {
+              wrapper: 'cloudflare',
+              converter: 'cloudflare',
+              incrementalCache: 'cloudflare',
+              tagCache: 'cloudflare',
+            },
+          }
+          export default config
+          EOF
+
       - name: Build
         run: |
-          rm -f open-next.config.ts
-          printf 'y\n' | bunx opennextjs-cloudflare build
+          echo 'y' | bunx opennextjs-cloudflare build
         env:
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
