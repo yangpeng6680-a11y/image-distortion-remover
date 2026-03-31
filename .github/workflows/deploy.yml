@@ -1,12 +1,11 @@
-name: Deploy to Cloudflare Pages
+name: Build Only
 
 on:
   push:
     branches: [main]
-  workflow_dispatch:
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,10 +17,3 @@ jobs:
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
           NEXTAUTH_URL: https://imagedistortion.shop
           NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-      - uses: cloudflare/pages-action@v1
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: image-distortion-remover
-          directory: .next
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
