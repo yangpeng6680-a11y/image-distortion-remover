@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -18,30 +18,22 @@ jobs:
       - name: Install
         run: bun install
 
+      - name: Create wrangler.toml
+        run: |
+          cat > wrangler.toml << 'EOF'
+          name = "image-distortion-remover"
+          compatibility_date = "2025-09-27"
+          pages_project = "image-distortion-remover"
+          EOF
+
       - name: Build
-        run: yes | bunx opennextjs-cloudflare build
+        run: bun run build
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-output
-          path: .next/
-          retention-days: 1
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: build-output
-
-      - name: Deploy to Cloudflare Pages
+      - name: Deploy
         uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          accountId: 4a231bf78ffa10bfebe25d64ca3fc44f
           projectName: image-distortion-remover
           directory: .next
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
