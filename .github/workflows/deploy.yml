@@ -8,47 +8,23 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v1
-      - run: bun install
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install
+        run: npm ci
       - name: Build
-        run: |
-          cat > open-next.config.ts << 'EOF'
-          const config = {
-            default: {
-              override: {
-                wrapper: "cloudflare-node",
-                converter: "edge",
-                proxyExternalRequest: "fetch",
-                incrementalCache: "dummy",
-                tagCache: "dummy",
-                queue: "dummy",
-              },
-            },
-            edgeExternals: ["node:crypto"],
-            middleware: {
-              external: true,
-              override: {
-                wrapper: "cloudflare-edge",
-                converter: "edge",
-                proxyExternalRequest: "fetch",
-                incrementalCache: "dummy",
-                tagCache: "dummy",
-                queue: "dummy",
-              },
-            },
-          }
-          export default config
-          EOF
-          bunx opennextjs-cloudflare build
+        run: npm run build
         env:
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
           NEXTAUTH_URL: https://imagedistortion.shop
           NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
       - name: Deploy
-        run: bunx wrangler deploy
+        run: npx wrangler deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
