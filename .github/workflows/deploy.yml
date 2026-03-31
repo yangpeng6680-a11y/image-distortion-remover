@@ -15,38 +15,8 @@ jobs:
 
       - run: bun install
 
-      - name: Create config
-        run: |
-          cat > open-next.config.ts << 'EOF'
-          const config = {
-            default: {
-              override: {
-                wrapper: "cloudflare-node",
-                converter: "edge",
-                proxyExternalRequest: "fetch",
-                incrementalCache: "dummy",
-                tagCache: "dummy",
-                queue: "dummy",
-              },
-            },
-            edgeExternals: ["node:crypto"],
-            middleware: {
-              external: true,
-              override: {
-                wrapper: "cloudflare-edge",
-                converter: "edge",
-                proxyExternalRequest: "fetch",
-                incrementalCache: "dummy",
-                tagCache: "dummy",
-                queue: "dummy",
-              },
-            },
-          }
-          export default config
-          EOF
-
       - name: Build
-        run: bunx opennextjs-cloudflare build
+        run: bun run build
         env:
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
@@ -59,5 +29,5 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_PAGES_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: image-distortion-remover
-          directory: .open-next/assets
+          directory: .next
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
