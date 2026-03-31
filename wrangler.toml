@@ -2,6 +2,7 @@ name = "image-distortion-remover"
 main = ".open-next/worker.js"
 compatibility_date = "2025-09-27"
 compatibility_flags = ["nodejs_compat"]
+account_id = "4a231bf78ffa10bfebe25d64ca3fc44f"
 
 [vars]
 NEXTAUTH_URL = "https://imagedistortion.shop"
