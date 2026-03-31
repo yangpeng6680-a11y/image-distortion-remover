@@ -12,7 +12,6 @@ const handler = NextAuth({
     signIn: '/',
   },
   secret: process.env.NEXTAUTH_SECRET || "development-secret-change-in-production",
-  trustHost: true,
   callbacks: {
     async session({ session, token }) {
       if (session.user && token.sub) {
