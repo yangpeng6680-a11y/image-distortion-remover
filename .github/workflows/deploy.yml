@@ -13,7 +13,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
       - name: Install
-        run: bun install
+        run: |
+          bun config set registry https://registry.npmmirror.com
+          bun install --registry https://registry.npmmirror.com
       - name: Build
         run: bunx opennextjs-cloudflare build
         env:
