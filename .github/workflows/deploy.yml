@@ -12,10 +12,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
+      - name: Setup npm mirror
+        run: echo "registry=https://registry.npmmirror.com" > .npmrc
       - name: Install
-        run: |
-          bun config set registry https://registry.npmmirror.com
-          bun install --registry https://registry.npmmirror.com
+        run: bun install
       - name: Build
         run: bunx opennextjs-cloudflare build
         env:
